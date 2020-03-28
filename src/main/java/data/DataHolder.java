@@ -1,6 +1,5 @@
 package data;
 
-import javax.annotation.PostConstruct;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -17,11 +16,6 @@ public class DataHolder {
         initEdges();
     }
 
-
-    private void test(){
-        this.getAllPointEdges(getPoints().get(0));
-        this.getEdgeByPoints(getPoints().get(0), getPoints().get(1));
-    }
 
     private void initDataFromFile() {
         FileReader fileReader = new FileReader();
@@ -49,9 +43,9 @@ public class DataHolder {
             Point beginPoint = edge.getBeginPoint();
             Point endPoint = edge.getEndPoint();
 
-            if(arePointsEqual(beginPoint, p1) && arePointsEqual(endPoint, p2)){
+            if(arePointsEquals(beginPoint, p1) && arePointsEquals(endPoint, p2)){
                 return edge;
-            }else if(arePointsEqual(beginPoint, p2) && arePointsEqual(endPoint, p1)){
+            }else if(arePointsEquals(beginPoint, p2) && arePointsEquals(endPoint, p1)){
                 return edge;
             }
         }
@@ -79,7 +73,7 @@ public class DataHolder {
         return edgesForPoint;
     }
 
-    Boolean arePointsEqual(Point p1, Point p2){
+    Boolean arePointsEquals(Point p1, Point p2){
         if(p1.getX() == p2.getX() && p1.getY() == p2.getY()){
             return true;
         }
