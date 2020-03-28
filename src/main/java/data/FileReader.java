@@ -20,7 +20,9 @@ public class FileReader {
 
         Stream <String> lines = br.lines()
                 .map(str -> parseData(str, dataHolder));
-        lines.forEach(System.out::println);
+        lines.forEach(line -> {
+
+        });
 
         lines.close();
     }

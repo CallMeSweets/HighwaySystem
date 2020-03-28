@@ -15,8 +15,6 @@ public class DataHolder {
     public DataHolder() {
         initDataFromFile();
         initEdges();
-        System.out.println(123);
-        test();
     }
 
 
@@ -28,7 +26,6 @@ public class DataHolder {
     private void initDataFromFile() {
         FileReader fileReader = new FileReader();
         fileReader.readDataFromFile(this);
-        System.out.println(123);
     }
 
     private void initEdges() {
