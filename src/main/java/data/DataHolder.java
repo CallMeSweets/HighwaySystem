@@ -1,6 +1,6 @@
 package data;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 public class DataHolder {
@@ -8,8 +8,8 @@ public class DataHolder {
     private int W1;
     private int W2;
 
-    private List<Point> points = new LinkedList<>();
-    private List<Edge>  edges = new LinkedList<>();
+    private List<Point> points = new ArrayList<>();
+    private List<Edge>  edges = new ArrayList<>();
 
     public DataHolder() {
         initDataFromFile();
@@ -38,7 +38,7 @@ public class DataHolder {
         }
     }
 
-    Edge getEdgeByPoints(Point p1, Point p2){
+    public Edge getEdgeByPoints(Point p1, Point p2){
         for(Edge edge: edges){
             Point beginPoint = edge.getBeginPoint();
             Point endPoint = edge.getEndPoint();
@@ -53,12 +53,12 @@ public class DataHolder {
         return null;
     }
 
-    List<Edge> getAllPointEdges(Point point){
+    public List<Edge> getAllPointEdges(Point point){
         return getPointEdges(point);
     }
 
     private List<Edge> getPointEdges(Point point){
-        List<Edge> edgesForPoint = new LinkedList<>();
+        List<Edge> edgesForPoint = new ArrayList<>();
         for(Edge edge: edges){
             Point p1 = edge.getBeginPoint();
             Point p2 = edge.getEndPoint();
@@ -73,30 +73,30 @@ public class DataHolder {
         return edgesForPoint;
     }
 
-    Boolean arePointsEquals(Point p1, Point p2){
+    public Boolean arePointsEquals(Point p1, Point p2){
         if(p1.getX() == p2.getX() && p1.getY() == p2.getY()){
             return true;
         }
         return false;
     }
 
-    Integer getNumberOfPoints(){
+    public Integer getNumberOfPoints(){
         return points.size();
     }
 
-    Integer getNumberOfEdges(){
+    public Integer getNumberOfEdges(){
         return edges.size();
     }
 
-    Integer getNumberOfPointEdges(Point point){
+    public Integer getNumberOfPointEdges(Point point){
         return  getPointEdges(point).size();
     }
 
-    Boolean removePoint(Point point){
+    public Boolean removePoint(Point point){
         return points.remove(point);
     }
 
-    Boolean removeEdge(Edge edge){
+    public Boolean removeEdge(Edge edge){
         return edges.remove(edge);
     }
 

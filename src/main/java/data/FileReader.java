@@ -18,7 +18,7 @@ public class FileReader {
             System.out.println("File can not be found");
         }
 
-        Stream <String> lines = br.lines()
+        Stream<String> lines = br.lines()
                 .map(str -> parseData(str, dataHolder));
         lines.forEach(line -> {
 
