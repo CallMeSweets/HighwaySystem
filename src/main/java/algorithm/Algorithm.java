@@ -11,7 +11,6 @@ public class Algorithm {
     private DataHolder G;
     private Edge[] edgeTo;
     private double[] objectives;
-    private boolean[] relaxed;          // prevents loop procedure
     private IndexMinPQ<Double> pq;
     private final int roads;
 
@@ -23,7 +22,6 @@ public class Algorithm {
 
         edgeTo = new Edge[vertices];
         objectives = new double[vertices];
-        relaxed = new boolean[vertices];
         pq = new IndexMinPQ<Double>(vertices);
 
         for(int v = 0; v < objectives.length; v++) {
@@ -44,7 +42,9 @@ public class Algorithm {
             relax(currentV);
         }
 
-        for (Edge edge : edgeTo) {
+        LinkedList<Edge> highwayEdges = new LinkedList<>(Arrays.asList(edgeTo));
+        highwayEdges.remove(null);
+        for (Edge edge : highwayEdges) {
             System.out.println(edge);
         }
     }
@@ -57,7 +57,7 @@ public class Algorithm {
             Point to = e.getBeginPoint().equals(from) ? e.getEndPoint() : e.getBeginPoint();
 
             int w = points.indexOf(to);
-            
+
             double distance = e.getWeight();
             double currObjective = G.getW1() * distance + G.getW2() * distance / roads;
 

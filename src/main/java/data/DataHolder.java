@@ -1,6 +1,6 @@
 package data;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 public class DataHolder {
@@ -8,8 +8,8 @@ public class DataHolder {
     private int W1;
     private int W2;
 
-    private List<Point> points = new ArrayList<>();
-    private List<Edge>  edges = new ArrayList<>();
+    private List<Point> points = new LinkedList<>();
+    private List<Edge>  edges = new LinkedList<>();
 
     public DataHolder() {
         initDataFromFile();
@@ -58,7 +58,7 @@ public class DataHolder {
     }
 
     private List<Edge> getPointEdges(Point point){
-        List<Edge> edgesForPoint = new ArrayList<>();
+        List<Edge> edgesForPoint = new LinkedList<>();
         for(Edge edge: edges){
             Point p1 = edge.getBeginPoint();
             Point p2 = edge.getEndPoint();
