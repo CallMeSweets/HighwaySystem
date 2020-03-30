@@ -26,6 +26,10 @@ public class Point {
         this.y = y;
     }
 
+    public boolean equals(Point point) {
+        return x == point.x && y == point.y;
+    }
+
     public String toString() {
         return "(" + x + " ," + y + ")";
     }

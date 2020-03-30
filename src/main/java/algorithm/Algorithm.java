@@ -41,11 +41,7 @@ public class Algorithm {
         pq.insert(startV, 0.0);
         while(!pq.isEmpty()){
             int currentV = pq.delMin();
-            
-            if(!relaxed[currentV])
-                relax(currentV);
-            
-            relaxed[currentV] = true;
+            relax(currentV);
         }
 
         for (Edge edge : edgeTo) {
@@ -58,13 +54,14 @@ public class Algorithm {
         Point from = points.get(v);
 
         for(Edge e: G.getAllPointEdges(from)) {
-            Point to = e.getEndPoint();
-            int w = points.indexOf(to);
+            Point to = e.getBeginPoint().equals(from) ? e.getEndPoint() : e.getBeginPoint();
 
+            int w = points.indexOf(to);
+            
             double distance = e.getWeight();
             double currObjective = G.getW1() * distance + G.getW2() * distance / roads;
-            
-            if(objectives[w] >= currObjective) {
+
+            if(objectives[w] > currObjective) {
                 objectives[w] = currObjective;
                 edgeTo[w] = e;
                 
