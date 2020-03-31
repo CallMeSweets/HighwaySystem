@@ -11,6 +11,7 @@ public class Algorithm {
     private DataHolder G;
     private Edge[] edgeTo;
     private double[] objectives;
+    private boolean[] relaxed;
     private IndexMinPQ<Double> pq;
     private final int roads;
 
@@ -22,6 +23,7 @@ public class Algorithm {
 
         edgeTo = new Edge[vertices];
         objectives = new double[vertices];
+        relaxed = new boolean[vertices];
         pq = new IndexMinPQ<Double>(vertices);
 
         for(int v = 0; v < objectives.length; v++) {
@@ -39,7 +41,11 @@ public class Algorithm {
         pq.insert(startV, 0.0);
         while(!pq.isEmpty()){
             int currentV = pq.delMin();
-            relax(currentV);
+
+            if(!relaxed[currentV])
+                relax(currentV);
+            
+            relaxed[currentV] = true;
         }
 
         LinkedList<Edge> highwayEdges = new LinkedList<>(Arrays.asList(edgeTo));
