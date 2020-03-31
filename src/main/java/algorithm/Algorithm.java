@@ -8,21 +8,21 @@ import data.Point;
 
 public class Algorithm {
 
-    private DataHolder G;
+    private DataHolder dataHolder;
     private Edge[] edgeTo;
     private double[] objectives;
-    private IndexMinPQ<Double> pq;
-    private final int roads;
+    private IndexMinPQ<Double> priorityQueue;
+    private final int numberOfRoads;
 
     public Algorithm() {
-        G = new DataHolder();
+        dataHolder = new DataHolder();
 
-        int vertices = G.getNumberOfPoints();
-        roads = (vertices - 1) * vertices / 2;
+        int numberOfPoints = dataHolder.getNumberOfPoints();
+        numberOfRoads = (numberOfPoints - 1) * numberOfPoints / 2;
 
-        edgeTo = new Edge[vertices];
-        objectives = new double[vertices];
-        pq = new IndexMinPQ<Double>(vertices);
+        edgeTo = new Edge[numberOfPoints];
+        objectives = new double[numberOfPoints];
+        priorityQueue = new IndexMinPQ<>(numberOfPoints);
 
         for(int v = 0; v < objectives.length; v++) {
             objectives[v] = Double.POSITIVE_INFINITY;
@@ -30,16 +30,16 @@ public class Algorithm {
     }
 
     public void start() {
-        Edge minDist = Collections.min(G.getEdges());
-        Point start = minDist.getBeginPoint();
-        int startV = G.getPoints().indexOf(start);
+        Edge minDist = Collections.min(dataHolder.getEdges());
+        Point startPoint = minDist.getBeginPoint();
+        int startPointIndex = dataHolder.getPoints().indexOf(startPoint);
 
-        objectives[startV] = 0.0;
+        objectives[startPointIndex] = 0.0;
 
-        pq.insert(startV, 0.0);
-        while(!pq.isEmpty()){
-            int currentV = pq.delMin();
-            relax(currentV);
+        priorityQueue.insert(startPointIndex, 0.0);
+        while(!priorityQueue.isEmpty()){
+            int currentV = priorityQueue.delMin();
+            makePointFree(currentV);
         }
 
         LinkedList<Edge> highwayEdges = new LinkedList<>(Arrays.asList(edgeTo));
@@ -49,26 +49,26 @@ public class Algorithm {
         }
     }
 
-    private void relax(int v) {
-        List<Point> points = G.getPoints();
-        Point from = points.get(v);
+    private void makePointFree(int pointIndex) {
+        List<Point> points = dataHolder.getPoints();
+        Point from = points.get(pointIndex);
 
-        for(Edge e: G.getAllPointEdges(from)) {
+        for(Edge e: dataHolder.getAllPointEdges(from)) {
             Point to = e.getBeginPoint().equals(from) ? e.getEndPoint() : e.getBeginPoint();
 
             int w = points.indexOf(to);
 
             double distance = e.getWeight();
-            double currObjective = G.getW1() * distance + G.getW2() * distance / roads;
+            double currObjective = dataHolder.getW1() * distance + dataHolder.getW2() * distance / numberOfRoads;
 
             if(objectives[w] > currObjective) {
                 objectives[w] = currObjective;
                 edgeTo[w] = e;
                 
-                if(pq.contains(w))
-                    pq.change(w, objectives[w]);
+                if(priorityQueue.contains(w))
+                    priorityQueue.change(w, objectives[w]);
                 else
-                    pq.insert(w, objectives[w]);
+                    priorityQueue.insert(w, objectives[w]);
             }
         }
     }

@@ -4,9 +4,9 @@ public class Edge implements Comparable<Edge> {
 
     private Point beginPoint;
     private Point endPoint;
-    private int weight;
+    private double weight;
 
-    public Edge(final Point beginPoint, final Point endPoint, final int weight) {
+    public Edge(final Point beginPoint, final Point endPoint, final double weight) {
         this.beginPoint = beginPoint;
         this.endPoint = endPoint;
         this.weight = weight;
@@ -28,11 +28,11 @@ public class Edge implements Comparable<Edge> {
         this.endPoint = endPoint;
     }
 
-    public int getWeight() {
+    public double getWeight() {
         return weight;
     }
 
-    public void setWeight(final int weight) {
+    public void setWeight(final double weight) {
         this.weight = weight;
     }
 
