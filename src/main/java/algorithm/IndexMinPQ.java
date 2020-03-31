@@ -50,7 +50,7 @@ public class IndexMinPQ<Key extends Comparable<Key>> {
         sink(1);
         assert min == pq[n+1];
         qp[min] = -1;        // delete
-        keys[min] = null;    // to help with garbage collection
+        keys[min] = null;    // to help with garbage collector
         pq[n+1] = -1;        // not needed
         return min;
     }

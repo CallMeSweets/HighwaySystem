@@ -5,8 +5,8 @@ import java.util.List;
 
 public class DataHolder {
 
-    private int W1;
-    private int W2;
+    private double W1;
+    private double W2;
 
     private List<Point> points = new LinkedList<>();
     private List<Edge>  edges = new LinkedList<>();
@@ -28,9 +28,9 @@ public class DataHolder {
             for(int j = i + 1; j < points.size(); j++){
                 Point p2 = points.get(j);
 
-                int xDistance = p1.getX() - p2.getX();
-                int yDistance = p1.getY() - p2.getY();
-                int weight = (int)Math.sqrt(xDistance*xDistance + yDistance*yDistance);
+                double xDistance = p1.getX() - p2.getX();
+                double yDistance = p1.getY() - p2.getY();
+                double weight = Math.sqrt(xDistance*xDistance + yDistance*yDistance);
 
                 Edge edge = new Edge(p1, p2, weight);
                 edges.add(edge);
@@ -108,19 +108,19 @@ public class DataHolder {
         return edges;
     }
 
-    public int getW1() {
+    public double getW1() {
         return W1;
     }
 
-    public void setW1(int w1) {
+    public void setW1(double w1) {
         W1 = w1;
     }
 
-    public int getW2() {
+    public double getW2() {
         return W2;
     }
 
-    public void setW2(int w2) {
+    public void setW2(double w2) {
         W2 = w2;
     }
 
