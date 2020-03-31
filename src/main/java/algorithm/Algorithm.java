@@ -11,18 +11,18 @@ public class Algorithm {
     private DataHolder dataHolder;
     private Edge[] edgeTo;
     private double[] objectives;
-    private IndexMinPQ<Double> pq;
+    private IndexMinPQ<Double> priorityQueue;
     private final int roads;
 
     public Algorithm() {
         dataHolder = new DataHolder();
 
-        int vertices = dataHolder.getNumberOfPoints();
-        roads = (vertices - 1) * vertices / 2;
+        int numberOfPoints = dataHolder.getNumberOfPoints();
+        roads = (numberOfPoints - 1) * numberOfPoints / 2;
 
-        edgeTo = new Edge[vertices];
-        objectives = new double[vertices];
-        pq = new IndexMinPQ<Double>(vertices);
+        edgeTo = new Edge[numberOfPoints];
+        objectives = new double[numberOfPoints];
+        priorityQueue = new IndexMinPQ<>(numberOfPoints);
 
         for(int v = 0; v < objectives.length; v++) {
             objectives[v] = Double.POSITIVE_INFINITY;
@@ -36,9 +36,9 @@ public class Algorithm {
 
         objectives[startPointIndex] = 0.0;
 
-        pq.insert(startPointIndex, 0.0);
-        while(!pq.isEmpty()){
-            int currentV = pq.delMin();
+        priorityQueue.insert(startPointIndex, 0.0);
+        while(!priorityQueue.isEmpty()){
+            int currentV = priorityQueue.delMinElementInPQ();
             makePointFree(currentV);
         }
 
@@ -51,28 +51,28 @@ public class Algorithm {
 
     private void makePointFree(int pointIndex) {
         List<Point> points = dataHolder.getPoints();
-        Point from = points.get(pointIndex);
+        Point startPoint = points.get(pointIndex);
 
-        for(Edge e: dataHolder.getAllPointEdges(from)) {
-            Point to = e.getBeginPoint().equals(from) ? e.getEndPoint() : e.getBeginPoint();
+        for(Edge startPointEdge: dataHolder.getAllPointEdges(startPoint)) {
+            Point nextPoint = startPointEdge.getBeginPoint().equals(startPoint) ? startPointEdge.getEndPoint() : startPointEdge.getBeginPoint();
 
-            int w = points.indexOf(to);
+            int indexNextPoint = points.indexOf(nextPoint);
 
-            double distance = e.getWeight();
+            double distance = startPointEdge.getWeight();
             double currObjective = dataHolder.getW1() * distance + dataHolder.getW2() * distance / roads;
 
-            if(objectives[w] > currObjective) {
-                objectives[w] = currObjective;
+            if(objectives[indexNextPoint] > currObjective) {
+                objectives[indexNextPoint] = currObjective;
                 
-                if(Arrays.asList(edgeTo).contains(e))
+                if(Arrays.asList(edgeTo).contains(startPointEdge))
                     continue;
                 
-                edgeTo[w] = e;
+                edgeTo[indexNextPoint] = startPointEdge;
                 
-                if(pq.contains(w))
-                    pq.change(w, objectives[w]);
+                if(priorityQueue.contains(indexNextPoint))
+                    priorityQueue.change(indexNextPoint, objectives[indexNextPoint]);
                 else
-                    pq.insert(w, objectives[w]);
+                    priorityQueue.insert(indexNextPoint, objectives[indexNextPoint]);
             }
         }
     }

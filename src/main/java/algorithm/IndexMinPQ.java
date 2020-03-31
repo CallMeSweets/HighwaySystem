@@ -3,55 +3,55 @@ package algorithm;
 import java.util.NoSuchElementException;
 
 public class IndexMinPQ<Key extends Comparable<Key>> {
-    private int maxN;        // maximum number of elements on PQ
-    private int n;           // number of elements on PQ
-    private int[] pq;        // binary heap using 1-based indexing
-    private int[] qp;        // inverse of pq - qp[pq[i]] = pq[qp[i]] = i
+    private int maxPQElementsNumber;
+    private int PQElementsNumber;
+    private int[] priorityQueue;
+    private int[] inversePriorityQueue;
     private Key[] keys;      // keys[i] = priority of i
 
-    public IndexMinPQ(int maxN) {
-        if (maxN < 0) throw new IllegalArgumentException();
-        this.maxN = maxN;
-        n = 0;
-        keys = (Key[]) new Comparable[maxN + 1];    
-        pq   = new int[maxN + 1];
-        qp   = new int[maxN + 1];                  
-        for (int i = 0; i <= maxN; i++)
-            qp[i] = -1;
+    public IndexMinPQ(int maxPQElementsNumber) {
+        if (maxPQElementsNumber < 0) throw new IllegalArgumentException();
+        this.maxPQElementsNumber = maxPQElementsNumber;
+        PQElementsNumber = 0;
+        keys = (Key[]) new Comparable[maxPQElementsNumber + 1];
+        priorityQueue   = new int[maxPQElementsNumber + 1];
+        inversePriorityQueue   = new int[maxPQElementsNumber + 1];
+        for (int i = 0; i <= maxPQElementsNumber; i++)
+            inversePriorityQueue[i] = -1;
     }
 
     public boolean isEmpty() {
-        return n == 0;
+        return PQElementsNumber == 0;
     }
 
     public boolean contains(int i) {
         validateIndex(i);
-        return qp[i] != -1;
+        return inversePriorityQueue[i] != -1;
     }
 
     public int size() {
-        return n;
+        return PQElementsNumber;
     }
 
     public void insert(int i, Key key) {
         validateIndex(i);
         if (contains(i)) throw new IllegalArgumentException("index is already in the priority queue");
-        n++;
-        qp[i] = n;
-        pq[n] = i;
+        PQElementsNumber++;
+        inversePriorityQueue[i] = PQElementsNumber;
+        priorityQueue[PQElementsNumber] = i;
         keys[i] = key;
-        swim(n);
+        swim(PQElementsNumber);
     }
 
-    public int delMin() {
-        if (n == 0) throw new NoSuchElementException("Priority queue underflow");
-        int min = pq[1];
-        exch(1, n--);
+    public int delMinElementInPQ() {
+        if (PQElementsNumber == 0) throw new NoSuchElementException("Priority queue underflow");
+        int min = priorityQueue[1];
+        exch(1, PQElementsNumber--);
         sink(1);
-        assert min == pq[n+1];
-        qp[min] = -1;        // delete
+        assert min == priorityQueue[PQElementsNumber +1];
+        inversePriorityQueue[min] = -1;        // delete
         keys[min] = null;    // to help with garbage collector
-        pq[n+1] = -1;        // not needed
+        priorityQueue[PQElementsNumber +1] = -1;        // not needed
         return min;
     }
 
@@ -59,8 +59,8 @@ public class IndexMinPQ<Key extends Comparable<Key>> {
         validateIndex(i);
         if (!contains(i)) throw new NoSuchElementException("index is not in the priority queue");
         keys[i] = key;
-        swim(qp[i]);
-        sink(qp[i]);
+        swim(inversePriorityQueue[i]);
+        sink(inversePriorityQueue[i]);
     }
 
     public void change(int i, Key key) {
@@ -68,21 +68,21 @@ public class IndexMinPQ<Key extends Comparable<Key>> {
     }
 
     // throw an IllegalArgumentException if i is an invalid index
-    private void validateIndex(int i) {
-        if (i < 0) throw new IllegalArgumentException("index is negative: " + i);
-        if (i >= maxN) throw new IllegalArgumentException("index >= capacity: " + i);
+    private void validateIndex(int index) {
+        if (index < 0) throw new IllegalArgumentException("index is negative: " + index);
+        if (index >= maxPQElementsNumber) throw new IllegalArgumentException("index >= capacity: " + index);
     }
 
     private boolean greater(int i, int j) {
-        return keys[pq[i]].compareTo(keys[pq[j]]) > 0;
+        return keys[priorityQueue[i]].compareTo(keys[priorityQueue[j]]) > 0;
     }
 
     private void exch(int i, int j) {
-        int swap = pq[i];
-        pq[i] = pq[j];
-        pq[j] = swap;
-        qp[pq[i]] = i;
-        qp[pq[j]] = j;
+        int swap = priorityQueue[i];
+        priorityQueue[i] = priorityQueue[j];
+        priorityQueue[j] = swap;
+        inversePriorityQueue[priorityQueue[i]] = i;
+        inversePriorityQueue[priorityQueue[j]] = j;
     }
 
     private void swim(int k) {
@@ -93,9 +93,9 @@ public class IndexMinPQ<Key extends Comparable<Key>> {
     }
 
     private void sink(int k) {
-        while (2*k <= n) {
+        while (2*k <= PQElementsNumber) {
             int j = 2*k;
-            if (j < n && greater(j, j+1)) j++;
+            if (j < PQElementsNumber && greater(j, j+1)) j++;
             if (!greater(k, j)) break;
             exch(k, j);
             k = j;
