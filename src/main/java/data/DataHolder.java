@@ -11,6 +11,9 @@ public class DataHolder {
     private List<Point> points = new LinkedList<>();
     private List<Edge>  edges = new LinkedList<>();
 
+    public DataHolder(boolean ifGenerator){
+    }
+
     public DataHolder() {
         initDataFromFile();
         initEdges();
@@ -22,7 +25,7 @@ public class DataHolder {
         fileReader.readDataFromFile(this);
     }
 
-    private void initEdges() {
+    public void initEdges() {
         for(int i = 0; i < points.size(); i++){
             Point p1 = points.get(i);
             for(int j = i + 1; j < points.size(); j++){
@@ -129,4 +132,7 @@ public class DataHolder {
     }
 
 
+    public void setPoints(List<Point> points) {
+        this.points = points;
+    }
 }

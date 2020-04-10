@@ -12,11 +12,13 @@ public class Algorithm {
     private Edge[] edgeTo;
     private double[] objectives;
     private IndexMinPQ<Double> priorityQueue;
-    private final int roads;
+    private int roads;
 
     public Algorithm() {
         dataHolder = new DataHolder();
+    }
 
+    public void initAlgorithm(){
         int numberOfPoints = dataHolder.getNumberOfPoints();
         roads = (numberOfPoints - 1) * numberOfPoints / 2;
 
@@ -30,6 +32,8 @@ public class Algorithm {
     }
 
     public void start() {
+        initAlgorithm();
+
         Edge minDist = Collections.min(dataHolder.getEdges());
         Point startPoint = minDist.getBeginPoint();
         int startPointIndex = dataHolder.getPoints().indexOf(startPoint);
@@ -75,5 +79,9 @@ public class Algorithm {
                     priorityQueue.insert(indexNextPoint, objectives[indexNextPoint]);
             }
         }
+    }
+
+    public void setDataHolder(DataHolder dataHolder) {
+        this.dataHolder = dataHolder;
     }
 }
